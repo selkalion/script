@@ -48,6 +48,9 @@ while(cap.isOpened()):
     # Capture frame-by-frame
     ret, frame = cap.read()
     if ret == True:
+        #resize if video wider than 1280
+        if cap.get(3) > 1280:
+            frame = cv2.resize(frame, (1280, 720))
         count += 1
         if count == 24:
             count = 0

@@ -35,6 +35,9 @@ while(cap.isOpened()):
     # Capture frame-by-frame
     ret, frame = cap.read()
     if ret == True:
+        #resize if video wider than 1280
+        if cap.get(3) > 1280:
+            frame = cv2.resize(frame, (1280, 720))
         count += 1
         if count == 12:
             count = 0
@@ -59,7 +62,7 @@ while(cap.isOpened()):
         else:
             for (x, y, w, h) in faces:
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)                
-        # Display the resulting frame
+        # Display the resulting frame 
         cv2.imshow('AnimeFaceDetect',frame)
  
         # Press Q on keyboard to  exit
