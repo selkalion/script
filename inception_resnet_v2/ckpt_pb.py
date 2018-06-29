@@ -1,4 +1,3 @@
-
 import tensorflow as tf
 from tensorflow.contrib import slim
 
@@ -8,8 +7,8 @@ from tensorflow.python.tools.optimize_for_inference_lib import optimize_for_infe
 from preprocessing import inception_preprocessing
 
 checkpoints_dir = './data/training'
-OUTPUT_PB_FILENAME = 'minimal_graph.proto'
-NUM_CLASSES = 8
+OUTPUT_PB_FILENAME = 'minimal_graph.pb'
+NUM_CLASSES = 14
 
 # We need default size of image for a particular network.
 # The network was trained on images of that size -- so we

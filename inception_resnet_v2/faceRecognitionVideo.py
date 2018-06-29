@@ -33,11 +33,17 @@ label_lines = [line.rstrip() for line
     in tf.gfile.GFile("./data/animeface/labels.txt")]
 
 # Unpersists graph from file
-with tf.gfile.FastGFile("./minimal_graph.proto", 'rb') as f:
+with tf.gfile.FastGFile("./minimal_graph.pb", 'rb') as f:
     graph_def = tf.GraphDef()
     graph_def.ParseFromString(f.read())
     _ = tf.import_graph_def(graph_def, name='')
- 
+
+softmax_tensor = sess.graph.get_tensor_by_name('InceptionResnetV2/Logits/Predictions:0')
+img = np.zeros([100,100,3],dtype=np.uint8)
+cv2.imwrite("tmp/tmp.jpg",img)
+image_data = tf.gfile.FastGFile("tmp/tmp.jpg", 'rb').read()  
+sess.run(softmax_tensor, {'input_image:0': image_data })
+
 # Check if camera opened successfully
 if (cap.isOpened()== False): 
     print("Error opening video stream or file")
@@ -73,9 +79,7 @@ while(cap.isOpened()):
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
                 image_data = tf.gfile.FastGFile("tmp/tmp.jpg", 'rb').read()  
                 # Feed the image_data as input to the graph and get first prediction
-                softmax_tensor = sess.graph.get_tensor_by_name('InceptionResnetV2/Logits/Predictions:0')
-                predictions = sess.run(softmax_tensor, 
-                {'input_image:0': image_data})
+                predictions = sess.run(softmax_tensor,{'input_image:0': image_data})
                 # Sort to show labels of first prediction in order of confidence
                 top_k = predictions[0].argsort()[-len(predictions[0]):][::-1]
                 first = True

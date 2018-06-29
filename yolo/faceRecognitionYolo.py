@@ -40,6 +40,9 @@ with tf.gfile.FastGFile("../transfer-learning-anime/retrained_graph.pb", 'rb') a
     graph_def = tf.GraphDef()
     graph_def.ParseFromString(f.read())
     _ = tf.import_graph_def(graph_def, name='')
+
+softmax_tensor = sess.graph.get_tensor_by_name('final_result:0')
+sess.run(softmax_tensor)
  
 # Check if camera opened successfully
 if (cap.isOpened()== False): 
@@ -78,7 +81,6 @@ while(cap.isOpened()):
                     cv2.rectangle(frame,(left, top), (right, bottom), (0, 0, 255), 2)
                     image_data = tf.gfile.FastGFile("tmp/tmp.jpg", 'rb').read()  
                     # Feed the image_data as input to the graph and get first prediction
-                    softmax_tensor = sess.graph.get_tensor_by_name('final_result:0')
                     predictions = sess.run(softmax_tensor, 
                     {'DecodeJpeg/contents:0': image_data})
                     # Sort to show labels of first prediction in order of confidence
